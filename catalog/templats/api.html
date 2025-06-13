@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Book</title>
+</head>
+<body>
+    <h1>Create a New Book</h1>
+    <form id="bookForm">
+        <label>Title:</label><br>
+        <input type="text" name="title" required><br>
+
+        <label>Author:</label><br>
+        <input type="text" name="author" required><br>
+
+        <label>Published Date (YYYY-MM-DD):</label><br>
+        <input type="date" name="published_date" required><br>
+
+        <label>ISBN (13 digits):</label><br>
+        <input type="text" name="isbn" required><br>
+
+        <label>Page Count:</label><br>
+        <input type="number" name="page_count" min="1" required><br>
+
+        <label>Language:</label><br>
+        <input type="text" name="language" required><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        const form = document.getElementById("bookForm");
+
+        form.addEventListener("submit", function(e) {
+            e.preventDefault();
+
+            const data = Object.fromEntries(new FormData(form));
+            
+            fetch("http://localhost:8000/api/books/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "X-API-Key": "valid-key"   
+                },
+                body: JSON.stringify(data)
+            })
+            .then(res => res.json())
+            .then(data => {
+                alert("Book created:\n" + JSON.stringify(data, null, 2));
+            })
+            .catch(err => {
+                console.error("Error:", err);
+                alert("Failed to create book.");
+            });
+        });
+    </script>
+</body>
+</html>
